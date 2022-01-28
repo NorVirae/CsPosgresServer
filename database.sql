@@ -51,6 +51,8 @@ CREATE TABLE spawns
   name          VARCHAR    NULL,
   parts      VARCHAR[]     NULL,
   breedcount   INTEGER     NULL,
+  image       VARCHAR     NULL,
+
   PRIMARY KEY (spawnId)
 );
 

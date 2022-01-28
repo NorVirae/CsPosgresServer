@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const Pool = require('./db');
+const Pool = require('./model/db');
 
 const app = express()
 
@@ -14,7 +14,6 @@ app.get("/", (req, res)=>{
 })
 
 app.post("/create/spawn", async(req, res)=> {
-
 
     try{
         console.log(req.body)
