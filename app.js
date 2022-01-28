@@ -1,10 +1,11 @@
 const express = require('express');
+const graphqlHTTP = require('express-graphql').graphqlHTTP;
 const cors = require('cors');
-const Pool = require('./model/db');
+const Pool = require('./db/db');
 
 const app = express()
 
-
+app.use("/graphql", )
 app.use(cors())
 app.use(express.json())
 
@@ -12,6 +13,11 @@ app.use(express.json())
 app.get("/", (req, res)=>{
     res.json({msg:"connection was successful!"})
 })
+
+app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql:true
+}))
 
 app.post("/create/spawn", async(req, res)=> {
 
