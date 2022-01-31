@@ -6,6 +6,8 @@ module.exports = sequelize.define('spawns', {
     ownerid:{type:DataTypes.UUID},
     birthdate:{type:DataTypes.BIGINT, defaultValue:Date.now()},
     chain:{type: DataTypes.STRING},
+    price:{type: DataTypes.REAL},
+    priceCrypto:{type: DataTypes.REAL},
     parents:{type: DataTypes.ARRAY(DataTypes.INTEGER)},
     children:{type: DataTypes.ARRAY(DataTypes.INTEGER)},
     level:{type:DataTypes.INTEGER},
