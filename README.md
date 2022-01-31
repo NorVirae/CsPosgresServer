@@ -1,1 +1,1 @@
-A Postgresql Server with implementations in React, Node and Express. (PERN)
+A Postgresql Server with implementations in React, Node and Express. (PERN) and Sequelize ORM
