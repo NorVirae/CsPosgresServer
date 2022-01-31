@@ -11,9 +11,12 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^14.3.2",
     "express": "^4.17.2",
     "express-graphql": "^0.12.0",
     "graphql": "^15.8.0",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.14.1"
   }
 }

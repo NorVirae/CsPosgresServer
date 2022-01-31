@@ -11,11 +11,11 @@ CREATE TABLE Address
 
 CREATE TABLE Currencies
 (
-  id     uuid          NOT NULL,
-  userId uuid             NOT NULL,
-  cnd    DOUBLE PRECISION NULL    ,
-  css    DOUBLE PRECISION NULL    ,
-  cc     DOUBLE PRECISION NULL    ,
+  id     uuid   NOT NULL,
+  userId uuid   NOT NULL,
+  cnd    DOUBLE PRECISION NULL,
+  css    DOUBLE PRECISION NULL,
+  cc     DOUBLE PRECISION NULL,
   PRIMARY KEY (id)
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE spawnFigures
 
 CREATE TABLE spawns
 (
-  spawnId    BIGINT NOT NULL,
+  spawnId  SERIAL  BIGINT NOT NULL,
   ownerId    uuid   NOT NULL,
   birthdate   DATE      NOT NULL,
   chain      VARCHAR  NOT NULL,
@@ -55,6 +55,16 @@ CREATE TABLE spawns
 
   PRIMARY KEY (spawnId)
 );
+
+CREATE TABLE stats
+(
+    id SERIAL NOT NULL ,
+    moral INTEGER NULL,
+    skill INTEGER NULL,
+    health INTEGER NULL,
+    speed INTEGER NULL,
+    PRIMARY KEY (id)
+)
 
 CREATE TABLE tokens
 (

@@ -1,11 +1,14 @@
-const Pool = require("pg").Pool
+const Sequelize = require("sequelize")
+require('dotenv').config()
 
-const config = new Pool ({
-    user:"postgres",
-    database:"cyberspawns",
-    host:"localhost",
-    port:5432,
-    password:"25071999"
+module.exports = new Sequelize(database=process.env.DB_DATABASE, user=process.env.DB_USER, password=process.env.DB_PASSWORD, {
+    host:process.env.DB_HOST,
+    dialect:"postgres",
+    logging:false,
+
+    pool:{
+        max:5,
+        min:0,
+        idle:1000
+    }
 })
-
-module.exports = config;
