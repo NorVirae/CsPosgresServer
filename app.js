@@ -22,10 +22,15 @@ app.use('/graphql', graphqlHTTP({
     graphiql:true
 }))
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next()
+});
+
 app.post("/create/spawn", async(req, res)=> {
 
     try{
-        console.log(req.body)
         const data = req.body
         const newSpawn = await Pool.query(`INSERT INTO spawns(spawnid, ownerid, birthdate, chain, level, class, name, parts, breedcount) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
          [data.spawnid, data.ownerid, data.birthdate, data.chain, data.level, data.class, data.name, data.parts, data.breedcount])
@@ -33,7 +38,6 @@ app.post("/create/spawn", async(req, res)=> {
 
     }catch(err){
 
-        console.log(err)
         res.send(err)
 
     }
@@ -44,5 +48,4 @@ const port = process.env.PORT || 4000
 
 app.listen(port, ()=>{
     console.log("connection successful on port: "+port)
-    console.log(process.env.NODE_ENV)
 })

@@ -15,7 +15,6 @@ const restructureResult = (Arr) => {
     return newDats
 }
 
-console.log(process.env.DB_HOST, process.env.DB_DATABASE, process.env.DB_PASSWORD, process.env.DB_USER)
 
 
 const sequelize = db
@@ -37,7 +36,7 @@ checkConnection()
 
 const Spawns = spawnsModel
 const Stats = statsModel
-Stats.sync({alter:true})
+Stats.sync()
 Spawns.sync()
 
 
@@ -62,7 +61,7 @@ const SpawnType = new GraphQLObjectType({
             updatedAt:{type:GraphQLString},
             createdAt:{type:GraphQLString},
             ownerid:{type:GraphQLID},
-            birthdate:{type:GraphQLString},
+            birthdate:{type:GraphQLInt},
             chain:{type: GraphQLString},
             parents:{type: new GraphQLList(GraphQLInt)},
             children:{type: new GraphQLList(GraphQLInt)},
@@ -72,11 +71,9 @@ const SpawnType = new GraphQLObjectType({
                             let listedSpawns = await Spawns.findAll({
                                 where:{id:parent.parents}
                             })
-                            console.log(restructureResult(listedSpawns))
                             return restructureResult(listedSpawns)
                         }
                         catch(err){
-                            console.log(err)
                             return []
                         }
                     }},
@@ -94,15 +91,13 @@ const SpawnType = new GraphQLObjectType({
                     async resolve(parent, args){
                         try{
                             fetchedStats = await Stats.findOne({where:{id:parent.statsid}})
-                            console.log(fetchedStats)
                             return fetchedStats.dataValues
                         }
                         catch(err){
-                            console.log(err)
                             return {}
                         }
                     }},
-            breedCount:{type:GraphQLInt},
+            breedcount:{type:GraphQLInt},
             deleteCount:{type:GraphQLInt}
     })
 })
@@ -130,11 +125,11 @@ const RootQueryType = new GraphQLObjectType({
             async resolve(parents){
                 try{
                     const newSpawn = await Spawns.findAll()
-                    console.log(restructureResult(newSpawn))
+
                     return restructureResult(newSpawn)
                 }
                 catch(err){
-                    console.log(err)
+                    throw new console.error(err);
                 }
                
             }
@@ -145,17 +140,15 @@ const RootQueryType = new GraphQLObjectType({
             type:SpawnType,
             args:{id:{type:GraphQLInt}},
             async resolve(parents, args){
-                // console.log(args)
                 try{
                 const oneSpawn = await Spawns.findOne({
                     where:{id:args.id}
                 })
-                // console.log(oneSpawn)
                 return oneSpawn?oneSpawn.dataValues:{}
             }
 
             catch(err){
-                console.log(err)
+                throw new console.error(err);
                 }
             }
 
@@ -173,7 +166,6 @@ const RootQueryType = new GraphQLObjectType({
             type:SpawnType,
             args:{id:{type:GraphQLID}},
             resolve(parents, args){
-                // console.log(args)
                 return "Spawns.findById(args.id)"
             }
 
@@ -188,7 +180,6 @@ const Mutation = new GraphQLObjectType({
             type:SpawnType,
             args:{id:{type:GraphQLInt},
             ownerid:{type:GraphQLID},
-            birthdate:{type:GraphQLString},
             chain:{type: GraphQLString},
             children:{type: new GraphQLList(GraphQLInt)},
             parents:{type: new GraphQLList(GraphQLInt)},
@@ -202,7 +193,7 @@ const Mutation = new GraphQLObjectType({
             skill:{type:GraphQLInt},
             health:{type:GraphQLInt},
             morale:{type:GraphQLInt},
-            breedCount:{type:GraphQLInt},
+            breedcount:{type:GraphQLInt},
 
         },
 
@@ -215,7 +206,6 @@ const Mutation = new GraphQLObjectType({
                     health:args.health,
                     speed:args.speed
                 })
-                console.log(newStats.dataValues.id)
                 args.statsid = newStats.dataValues.id
 
                 const newSpawn = await Spawns.create(args)
@@ -224,12 +214,29 @@ const Mutation = new GraphQLObjectType({
 
             }
             catch(err){
-                console.log(err)
                 return err
             }
            
         }
      },
+
+     spawn:{
+        type:SpawnType,
+        args:{id:{type:GraphQLInt}},
+        async resolve(parents, args){
+            try{
+            const oneSpawn = await Spawns.findOne({
+                where:{id:args.id}
+            })
+            return oneSpawn?oneSpawn.dataValues:{}
+        }
+
+        catch(err){
+            throw new console.error(err);
+            }
+        }
+
+    },
 
      editSpawn:{
          type:SpawnType,
@@ -249,7 +256,7 @@ const Mutation = new GraphQLObjectType({
          skill:{type:GraphQLInt},
          health:{type:GraphQLInt},
          morale:{type:GraphQLInt},
-         breedCount:{type:GraphQLInt},
+         breedcount:{type:GraphQLInt},
 
         
         },
@@ -265,7 +272,7 @@ const Mutation = new GraphQLObjectType({
                 return resultedSpawn.dataValues
                 }
             catch(err){
-                console.log(err)
+                throw new console.error(err);
                 return {}
             }
         }
@@ -284,7 +291,6 @@ const Mutation = new GraphQLObjectType({
                 const deletedSpawn = await Spawns.destroy({
                     where:{id:args.id}
                 })
-                console.log(deletedSpawn)
                 const deleteStats = await Stats.destroy({
                     where:{id:statId}
                 })
@@ -292,8 +298,8 @@ const Mutation = new GraphQLObjectType({
             }
        
        catch(err){
-           console.log(err)
-           return {}
+        throw new console.error(err);
+        return {}
             }
         }
     },
@@ -302,21 +308,11 @@ const Mutation = new GraphQLObjectType({
         type:SpawnType,
        
        async resolve(parent, args){
-            // `let deletedSpawn = await Spawns.deleteMany()
-            // console.log(deletedSpawn)`
+           
            return "deletedSpawn"
         }
       },
 
-      spawn:{
-        type:SpawnType,
-        args:{id:{type:GraphQLID}},
-        resolve(parents, args){
-            // "console.log(args)"
-            return "Spawns.findById(args.id)"
-        }
-
-      },
 
     //   User mutation
 
@@ -378,8 +374,7 @@ const Mutation = new GraphQLObjectType({
     args:{id:{type:GraphQLID},
    },
    async resolve(parent, args){
-        // let deletedSpawn = await Spawns.findOneAndRemove({_id:args.id})
-        // console.log(deletedSpawn)
+        
        return "deletedSpawn"
     }
   },
@@ -388,8 +383,7 @@ const Mutation = new GraphQLObjectType({
     type:UserType,
    
    async resolve(parent, args){
-        // let deletedSpawn = await Users.deleteMany()
-        // console.log(deletedSpawn)
+        
        return "deletedSpawn"
     }
   },
@@ -398,7 +392,6 @@ const Mutation = new GraphQLObjectType({
     type:SpawnType,
     args:{id:{type:GraphQLID}},
     resolve(parents, args){
-        // console.log(args)
         return "Spawns.findById(args.id)"
             }
 

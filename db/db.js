@@ -5,6 +5,11 @@ module.exports = new Sequelize(database=process.env.DB_DATABASE, user=process.en
     host:process.env.DB_HOST,
     dialect:"postgres",
     logging:false,
+    dialectOptions: {
+        ssl: {
+            rejectUnauthorized: false
+        },
+    },
 
     pool:{
         max:5,
