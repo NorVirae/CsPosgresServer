@@ -2,7 +2,6 @@ const Sequelize = require("sequelize")
 const DBConfig = require("../config")
 require('dotenv').config()
 
-console.log(DBConfig)
 
 const SSLOption = (env) =>{
     if(env === "production"){
@@ -21,8 +20,7 @@ const SSLOption = (env) =>{
                 max:5,
                 min:0,
                 idle:1000
-            }
-                
+            }     
 
     }
 }else{

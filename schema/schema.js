@@ -36,8 +36,8 @@ checkConnection()
 
 const Spawns = spawnsModel
 const Stats = statsModel
-Stats.sync()
-Spawns.sync()
+Stats.sync({alter:true})
+Spawns.sync({alter:true})
 
 
 const {GraphQLObjectType,GraphQLSchema, GraphQLFloat, GraphQLInt, GraphQLID, GraphQLBoolean, GraphQLList, GraphQLString} = graphql
