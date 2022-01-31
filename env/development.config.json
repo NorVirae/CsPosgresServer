@@ -1,0 +1,10 @@
+{"DB":{
+    "DB_USER" : "postgres",
+    "DB_DATABASE" : "postgres",
+    "DB_HOST" : "localhost",
+    "DB_PASSWORD" : "25071999",
+    "DB_PORT" : 5432,
+    "NODE_ENV" : "development"
+
+    }
+}
